@@ -7535,6 +7535,10 @@
           "named": true
         },
         {
+          "type": "declClass",
+          "named": true
+        },
+        {
           "type": "declEnum",
           "named": true
         },

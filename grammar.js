@@ -558,6 +558,7 @@ module.exports = grammar({
 			$.declFile,
 			$.declString,
 			$.declProcRef,
+			alias($._declRecord, $.declClass),
 		)),
 
 		typeref:         $ => seq(
@@ -805,8 +806,20 @@ module.exports = grammar({
 			)),
 			field('parent', optional(seq('(',delimited($.typeref),')'))),
 			optional($._declClass),
-			optional(seq($.kAlign, field('alignment', $.literalNumber)))
+			optional($._recordAlignment)
 		),
+
+		_recordAlignment: $ => seq($.kAlign, choice(
+			field('alignment', $.literalNumber),
+			seq('(', field('alignment', $.literalNumber), ')')
+		)),
+
+		// Anonymous records are types too (including inside variant clauses).
+		// Prefer declClass for named records to preserve their existing tree shape.
+		_declRecord:    $ => prec(-1, seq(
+			optional($.kPacked), $.kRecord, $._declClass,
+			optional($._recordAlignment)
+		)),
 
 		declIntf:        $ => seq(
 			optional($.kPacked),

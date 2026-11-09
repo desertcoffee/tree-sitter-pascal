@@ -1,0 +1,193 @@
+==================
+Delphi inline records in fields and variant clauses
+==================
+
+type
+  TEnvelope = record
+    Header: packed record
+      Flag: Boolean;
+    end;
+    Payload: record
+      case Integer of
+        0: (Number: Integer);
+        1: (Text: PWideChar);
+    end;
+    case Integer of
+      0: (Detail: record
+        Count: Integer;
+      end);
+      1: (Items: array[0..1] of record
+        Value: Integer;
+      end);
+  end;
+var
+  Standalone: record
+    Next: Pointer;
+  end;
+
+---
+
+(root
+  (declTypes
+    (kType)
+    (declType
+      (identifier)
+      (kEq)
+      (declClass
+        (kRecord)
+        (declField
+          (identifier)
+          (type
+            (declClass
+              (kPacked)
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd))))
+        (declField
+          (identifier)
+          (type
+            (declClass
+              (kRecord)
+              (declVariant
+                (kCase)
+                (typeref
+                  (identifier))
+                (kOf)
+                (declVariantClause
+                  (caseLabel
+                    (literalNumber))
+                  (declField
+                    (identifier)
+                    (type
+                      (typeref
+                        (identifier)))))
+                (declVariantClause
+                  (caseLabel
+                    (literalNumber))
+                  (declField
+                    (identifier)
+                    (type
+                      (typeref
+                        (identifier))))))
+              (kEnd))))
+        (declVariant
+          (kCase)
+          (typeref
+            (identifier))
+          (kOf)
+          (declVariantClause
+            (caseLabel
+              (literalNumber))
+            (declField
+              (identifier)
+              (type
+                (declClass
+                  (kRecord)
+                  (declField
+                    (identifier)
+                    (type
+                      (typeref
+                        (identifier))))
+                  (kEnd)))))
+          (declVariantClause
+            (caseLabel
+              (literalNumber))
+            (declField
+              (identifier)
+              (type
+                (declArray
+                  (kArray)
+                  (range
+                    (literalNumber)
+                    (literalNumber))
+                  (kOf)
+                  (type
+                    (declClass
+                      (kRecord)
+                      (declField
+                        (identifier)
+                        (type
+                          (typeref
+                            (identifier))))
+                      (kEnd))))))))
+        (kEnd))))
+  (declVars
+    (kVar)
+    (declVar
+      (identifier)
+      (type
+        (declClass
+          (kRecord)
+          (declField
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (kEnd))))))
+
+==================
+Delphi record alignment forms
+==================
+
+type
+  TPlain = record
+    Value: Integer;
+  end align 8;
+  TParenthesized = record
+    Value: Integer;
+  end align(16);
+var
+  Inline: record
+    Value: Integer;
+  end align(8);
+
+---
+
+(root
+  (declTypes
+    (kType)
+    (declType
+      (identifier)
+      (kEq)
+      (declClass
+        (kRecord)
+        (declField
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (kEnd)
+        (kAlign)
+        (literalNumber)))
+    (declType
+      (identifier)
+      (kEq)
+      (declClass
+        (kRecord)
+        (declField
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (kEnd)
+        (kAlign)
+        (literalNumber))))
+  (declVars
+    (kVar)
+    (declVar
+      (identifier)
+      (type
+        (declClass
+          (kRecord)
+          (declField
+            (identifier)
+            (type
+              (typeref
+                (identifier))))
+          (kEnd)
+          (kAlign)
+          (literalNumber))))))

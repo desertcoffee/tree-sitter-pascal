@@ -4215,6 +4215,15 @@
             {
               "type": "SYMBOL",
               "name": "declProcRef"
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_declRecord"
+              },
+              "named": true,
+              "value": "declClass"
             }
           ]
         }
@@ -6431,11 +6440,40 @@
           "type": "CHOICE",
           "members": [
             {
+              "type": "SYMBOL",
+              "name": "_recordAlignment"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "_recordAlignment": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "kAlign"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "alignment",
+              "content": {
+                "type": "SYMBOL",
+                "name": "literalNumber"
+              }
+            },
+            {
               "type": "SEQ",
               "members": [
                 {
-                  "type": "SYMBOL",
-                  "name": "kAlign"
+                  "type": "STRING",
+                  "value": "("
                 },
                 {
                   "type": "FIELD",
@@ -6444,15 +6482,57 @@
                     "type": "SYMBOL",
                     "name": "literalNumber"
                   }
+                },
+                {
+                  "type": "STRING",
+                  "value": ")"
                 }
               ]
-            },
-            {
-              "type": "BLANK"
             }
           ]
         }
       ]
+    },
+    "_declRecord": {
+      "type": "PREC",
+      "value": -1,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "kPacked"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          },
+          {
+            "type": "SYMBOL",
+            "name": "kRecord"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "_declClass"
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_recordAlignment"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          }
+        ]
+      }
     },
     "declIntf": {
       "type": "SEQ",
