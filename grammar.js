@@ -844,30 +844,42 @@ module.exports = grammar({
 		guid:            $ => prec(1,seq('[', $._ref, ']')),
 
 		_declClass:      $ => seq(
-			optional($._declFields),
-			optional($._classDeclarations),
-			repeat($.declSection),
-			optional($.declVariant),
+			repeat($.declField),
+			choice(
+				alias($._declField, $.declField),
+				seq(
+					optional($._classDeclarations),
+					repeat($.declSection),
+					optional(choice($.declVariant, alias($._declSectionTr, $.declSection)))
+				)
+			),
 			$.kEnd
 		),
 
 		declSection:     $ => seq(
 			optional($.kStrict),
 			choice($._visibility, ...enable_if(objc, $.kRequired, $.kOptional)),
-			optional($._declFields),
+			repeat($.declField),
 			optional($._classDeclarations)
 		),
 
-		_declFields:     $ => repeat1($.declField),
+		// Only the final field before end may omit its semicolon, not a field
+		// followed by a method, visibility section or variant part.
+		_declSectionTr:  $ => seq(
+			optional($.kStrict),
+			choice($._visibility, ...enable_if(objc, $.kRequired, $.kOptional)),
+			repeat($.declField),
+			alias($._declField, $.declField)
+		),
 
-		declField:       $ =>  seq(
+		declField:       $ => seq($._declField, ';'),
+		_declField:      $ => seq(
 			...enable_if(rtti, optional($.rttiAttributes)),
 			field('name', delimited1($.identifier)),
 			':',
 			field('type', $.type),
 			field('defaultValue', optional($.defaultValue)),
-			optional($._typeHints),
-			';'
+			optional($._typeHints)
 		),
 
 		declProp:        $ => seq(

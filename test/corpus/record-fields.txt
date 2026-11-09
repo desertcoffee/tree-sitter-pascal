@@ -1,0 +1,117 @@
+==================
+Delphi record fields without a trailing semicolon
+==================
+
+unit RecordFields;
+interface
+type
+  TEntry = packed record
+    Flags: Byte;
+    Value: Pointer
+  end;
+  TCallback = procedure(Entry: TEntry) of object;
+  TContainer = record
+  private
+    Entry: record
+      Number: Integer
+    end
+  end;
+var
+  Standalone: record
+    Count: Integer
+  end;
+procedure Run;
+implementation
+procedure Run;
+begin
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (identifier)
+          (kEq)
+          (declClass
+            (kPacked)
+            (kRecord)
+            (declField
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (declField
+              (identifier)
+              (type
+                (typeref
+                  (identifier))))
+            (kEnd)))
+        (declType
+          (identifier)
+          (kEq)
+          (type
+            (declProcRef
+              (kProcedure)
+              (declArgs
+                (declArg
+                  (identifier)
+                  (type
+                    (typeref
+                      (identifier)))))
+              (kOf)
+              (kObject))))
+        (declType
+          (identifier)
+          (kEq)
+          (declClass
+            (kRecord)
+            (declSection
+              (kPrivate)
+              (declField
+                (identifier)
+                (type
+                  (declClass
+                    (kRecord)
+                    (declField
+                      (identifier)
+                      (type
+                        (typeref
+                          (identifier))))
+                    (kEnd)))))
+            (kEnd))))
+      (declVars
+        (kVar)
+        (declVar
+          (identifier)
+          (type
+            (declClass
+              (kRecord)
+              (declField
+                (identifier)
+                (type
+                  (typeref
+                    (identifier))))
+              (kEnd)))))
+      (declProc
+        (kProcedure)
+        (identifier)))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kProcedure)
+          (identifier))
+        (block
+          (kBegin)
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))
