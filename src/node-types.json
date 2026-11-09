@@ -116,6 +116,14 @@
         {
           "type": "identifier",
           "named": true
+        },
+        {
+          "type": "literalNumber",
+          "named": true
+        },
+        {
+          "type": "literalString",
+          "named": true
         }
       ]
     }
@@ -1032,6 +1040,16 @@
     "type": "declClass",
     "named": true,
     "fields": {
+      "alignment": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "literalNumber",
+            "named": true
+          }
+        ]
+      },
       "parent": {
         "multiple": true,
         "required": false,
@@ -1093,6 +1111,10 @@
         },
         {
           "type": "kAbstract",
+          "named": true
+        },
+        {
+          "type": "kAlign",
           "named": true
         },
         {
@@ -1168,9 +1190,29 @@
       }
     },
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": false,
       "types": [
+        {
+          "type": "kDeprecated",
+          "named": true
+        },
+        {
+          "type": "kExperimental",
+          "named": true
+        },
+        {
+          "type": "kLibraryHint",
+          "named": true
+        },
+        {
+          "type": "kPlatform",
+          "named": true
+        },
+        {
+          "type": "literalString",
+          "named": true
+        },
         {
           "type": "rttiAttributes",
           "named": true
@@ -1396,9 +1438,29 @@
       }
     },
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": false,
       "types": [
+        {
+          "type": "kDeprecated",
+          "named": true
+        },
+        {
+          "type": "kExperimental",
+          "named": true
+        },
+        {
+          "type": "kLibraryHint",
+          "named": true
+        },
+        {
+          "type": "kPlatform",
+          "named": true
+        },
+        {
+          "type": "literalString",
+          "named": true
+        },
         {
           "type": "rttiAttributes",
           "named": true
@@ -1793,6 +1855,16 @@
         "types": [
           {
             "type": "declArgs",
+            "named": true
+          }
+        ]
+      },
+      "attribute": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "procAttribute",
             "named": true
           }
         ]
@@ -3000,11 +3072,27 @@
           "named": true
         },
         {
+          "type": "kDeprecated",
+          "named": true
+        },
+        {
+          "type": "kExperimental",
+          "named": true
+        },
+        {
           "type": "kFalse",
           "named": true
         },
         {
+          "type": "kLibraryHint",
+          "named": true
+        },
+        {
           "type": "kNil",
+          "named": true
+        },
+        {
+          "type": "kPlatform",
           "named": true
         },
         {
@@ -8210,8 +8298,7 @@
   },
   {
     "type": "comment",
-    "named": true,
-    "extra": true
+    "named": true
   },
   {
     "type": "identifier",
@@ -8227,6 +8314,10 @@
   },
   {
     "type": "kAdd",
+    "named": true
+  },
+  {
+    "type": "kAlign",
     "named": true
   },
   {
@@ -8763,7 +8854,6 @@
   },
   {
     "type": "pp",
-    "named": true,
-    "extra": true
+    "named": true
   }
 ]

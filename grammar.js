@@ -302,6 +302,7 @@ module.exports = grammar({
 		[$._ref, $._typeref],
 		[$._ref, $._tplArg],
 		[$._ref, $.declEnumValue],
+		[$._literal, $.declEnumValue],
 	],
 
 	rules: {
@@ -384,11 +385,13 @@ module.exports = grammar({
 		statementsTr:    $ => $._statementsTr,
 
 		asmBody: $ => repeat1(choice(
-			///([a-zA-Z0-9_]+([eE][nN][dD])|[eE][nN][dD][a-zA-Z0-9_]+|([^eE]|[eE][^nN]|[eE][nN][^dD]))+/,
-			$.identifier,       // Identifiers
-			/[0-9a-fA-F]/,      // Numbers
-			/[.,:;+\-*\[\]<>&%$]/, // Punctuation
-			/\([^*]|\)/         // Parentheses that are not comments
+			$.identifier,
+			alias($._literalString, $.literalString),
+			alias(/"[^"\r\n]*"/, $.literalString), $.literalNumber,
+			/[.,:;+\-*\[\]<>&%$@=\/]/, // Punctuation and local labels
+			// Do not consume the character after '('; it may open a string.
+			// Parenthesized comments are handled by extras.
+			/[()]/
 		)),
 
 		// EXPRESSIONS ---------------------------------------------------------
@@ -731,6 +734,7 @@ module.exports = grammar({
 				seq($.kAbsolute, $._ref),
 				field('defaultValue', $.defaultValue)
 			)),
+			optional($._typeHints),
 			';',
 			repeat(choice($._procAttribute, $.procExternal))
 		),
@@ -740,6 +744,7 @@ module.exports = grammar({
 			field('name', $.identifier),
 			optional(seq(':', field('type', $.type))),
 			field('defaultValue', $.defaultValue),
+			optional($._typeHints),
 			';',
 			repeat($._procAttribute)
 		),
@@ -752,7 +757,10 @@ module.exports = grammar({
 		// Type declarations
 
 		declEnum:        $ => seq('(', delimited1($.declEnumValue), ')'),
-		declEnumValue:   $ => seq(field('name', $.identifier), field('value', optional($.defaultValue))),
+		// The RTL redeclares Boolean = (False, True).
+		declEnumValue:   $ => seq(field('name', choice(
+			$.identifier, alias($.kFalse, $.identifier), alias($.kTrue, $.identifier)
+		)), field('value', optional($.defaultValue))),
 		declSet:         $ => seq($.kSet, $.kOf, $.type),
 		declSubrange:    $ => prec.dynamic(-1, seq(field('low', $._expr), '..', field('high', $._expr))),
 		declArray:       $ => seq(
@@ -775,7 +783,8 @@ module.exports = grammar({
 				':',
 				field('type', $.typeref),
 			)),
-			optional(seq($.kOf, $.kObject))
+			optional(seq($.kOf, $.kObject)),
+			repeat(field('attribute', alias($._callingConvention, $.procAttribute)))
 		)),
 
 		declMetaClass:   $ => seq($.kClass, $.kOf, $.typeref),
@@ -795,7 +804,8 @@ module.exports = grammar({
 				)
 			)),
 			field('parent', optional(seq('(',delimited($.typeref),')'))),
-			optional($._declClass)
+			optional($._declClass),
+			optional(seq($.kAlign, field('alignment', $.literalNumber)))
 		),
 
 		declIntf:        $ => seq(
@@ -843,6 +853,7 @@ module.exports = grammar({
 			':',
 			field('type', $.type),
 			field('defaultValue', optional($.defaultValue)),
+			optional($._typeHints),
 			';'
 		),
 
@@ -992,6 +1003,11 @@ module.exports = grammar({
 			...enable_if(fpc, seq('[', delimited(field('attribute', choice($.procAttribute)), ';'), ']', ';'))
 		)/*)*/,
 
+		_callingConvention: $ => choice(
+			$.kStdcall, $.kCdecl, $.kPascal, $.kRegister, $.kSafecall,
+			$.kWinapi,
+		),
+
 		_bareDirective:  $ => choice(
 			$.kStatic, $.kVirtual, $.kDynamic, $.kAbstract, $.kOverride,
 			$.kOverload, $.kReintroduce, $.kInline, $.kStdcall,
@@ -1054,7 +1070,7 @@ module.exports = grammar({
 		// record initializer
 		recInitializer:  $ => seq(
 			'(',
-			delimited1( $.recInitializerField, ';'),
+			delimited1( $.recInitializerField, ';'), optional(';'),
 			')'
 		),
 
@@ -1094,6 +1110,7 @@ module.exports = grammar({
 		kExports:          $ => /exports/i,
 
 		kAbsolute:         $ => /absolute/i,
+		kAlign:            $ => /align/i,
 
 		kProperty:         $ => /property/i,
 		kRead:             $ => /read/i,
