@@ -371,7 +371,7 @@ module.exports = grammar({
 				':',
 				field('type', $.typeref)
 			))),
-		varDef:          $ => seq($.kVar, field('name', $.identifier), ':', field('type', $.type)),
+		varDef:          $ => seq($.kVar, delimited1(field('name', $.identifier)), ':', field('type', $.type)),
 		varLoopDef:      $ => seq($.kVar, field('name', $.identifier), optional(seq(':', field('type', $.typeref)))),
 		constDef:        $ => seq($.kConst, field('name', $.identifier),
 			optional(seq(':', field('type', $.type))),

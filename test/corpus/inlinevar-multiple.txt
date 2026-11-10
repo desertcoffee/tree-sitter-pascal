@@ -1,0 +1,37 @@
+===
+Multiple inline variables
+===
+procedure Test;
+begin
+  var lt, rt: String;
+  var first, second, &type: Integer;
+  lt := rt;
+end;
+---
+(root
+  (defProc
+    (declProc
+      (kProcedure)
+      (identifier))
+    (block
+      (kBegin)
+      (varDef
+        (kVar)
+        (identifier)
+        (identifier)
+        (type
+          (declString
+            (kString))))
+      (varDef
+        (kVar)
+        (identifier)
+        (identifier)
+        (identifier)
+        (type
+          (typeref
+            (identifier))))
+      (assignment
+        (identifier)
+        (kAssign)
+        (identifier))
+      (kEnd))))
