@@ -386,9 +386,11 @@ module.exports = grammar({
 
 		asmBody: $ => repeat1(choice(
 			$.identifier,
+			// Keep local labels whole: the END in @end / @@END is not kEnd.
+			alias(/@@?[\p{L}\p{N}_]+/, $.identifier),
 			alias($._literalString, $.literalString),
 			alias(/"[^"\r\n]*"/, $.literalString), $.literalNumber,
-			/[.,:;+\-*\[\]<>&%$@=\/]/, // Punctuation and local labels
+			/[.,:;+\-*\[\]<>&%$@=\/]/, // Punctuation
 			// Do not consume the character after '('; it may open a string.
 			// Parenthesized comments are handled by extras.
 			/[()]/

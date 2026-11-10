@@ -1,0 +1,86 @@
+==================
+Inline assembly with keyword and numeric local labels
+==================
+
+procedure Convert;
+begin
+  asm
+    JS @@END
+    JMP @@386
+  @@1:
+    DEC EAX
+    JMP @@1
+  @@386:
+    JMP @@END
+  @@END:
+    NOP
+  end;
+  AfterAsm;
+end;
+procedure AfterAsm;
+begin
+end;
+
+---
+
+(root
+  (defProc
+    (declProc (kProcedure) (identifier))
+    (block
+      (kBegin)
+      (asm
+        (kAsm)
+        (asmBody
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier))
+        (kEnd))
+      (statement (identifier))
+      (kEnd)))
+  (defProc
+    (declProc (kProcedure) (identifier))
+    (block (kBegin) (kEnd))))
+
+==================
+Assembler routine with single-at keyword labels and a string
+==================
+
+procedure Convert;
+asm
+@end:
+  JMP @end
+  DB 'end',0
+end;
+procedure AfterAsm;
+begin
+end;
+
+---
+
+(root
+  (defProc
+    (declProc (kProcedure) (identifier))
+    (asm
+      (kAsm)
+      (asmBody
+        (identifier)
+        (identifier)
+        (identifier)
+        (identifier)
+        (literalString)
+        (literalNumber))
+      (kEnd)))
+  (defProc
+    (declProc (kProcedure) (identifier))
+    (block (kBegin) (kEnd))))
