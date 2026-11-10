@@ -5900,6 +5900,10 @@
           "named": true
         },
         {
+          "type": "kBegin",
+          "named": true
+        },
+        {
           "type": "kInitialization",
           "named": true
         },

@@ -152,17 +152,33 @@
               {
                 "type": "SYMBOL",
                 "name": "implementation"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "initialization"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "finalization"
               }
             ]
           }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "initialization"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "finalization"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "SYMBOL",
@@ -220,8 +236,17 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "SYMBOL",
-          "name": "kInitialization"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kInitialization"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kBegin"
+            }
+          ]
         },
         {
           "type": "CHOICE",
@@ -9903,6 +9928,9 @@
     [
       "_literal",
       "declEnumValue"
+    ],
+    [
+      "implementation"
     ]
   ],
   "precedences": [],

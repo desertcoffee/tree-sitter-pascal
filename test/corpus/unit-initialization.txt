@@ -1,0 +1,105 @@
+==================
+Empty unit begin initialization
+==================
+
+unit Startup;
+interface
+implementation
+begin
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName (identifier))
+    (interface (kInterface))
+    (implementation (kImplementation))
+    (initialization (kBegin))
+    (kEnd)
+    (kEndDot)))
+
+==================
+Unit begin initialization after a routine, with a nested block
+==================
+
+unit Startup;
+interface
+procedure Register;
+implementation
+procedure Register;
+begin
+end;
+BeGiN
+  // This block belongs to initialization, not the preceding routine.
+  begin
+    Register;
+  end;
+  Register
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName (identifier))
+    (interface
+      (kInterface)
+      (declProc (kProcedure) (identifier)))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc (kProcedure) (identifier))
+        (block (kBegin) (kEnd))))
+    (initialization
+      (kBegin)
+      (comment)
+      (block
+        (kBegin)
+        (statement (identifier))
+        (kEnd))
+      (statement (identifier)))
+    (kEnd)
+    (kEndDot)))
+
+==================
+Explicit initialization and finalization with nested blocks
+==================
+
+unit Startup;
+interface
+implementation
+initialization
+  begin
+    Register;
+  end;
+finalization
+  begin
+    Unregister;
+  end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName (identifier))
+    (interface (kInterface))
+    (implementation (kImplementation))
+    (initialization
+      (kInitialization)
+      (block
+        (kBegin)
+        (statement (identifier))
+        (kEnd)))
+    (finalization
+      (kFinalization)
+      (block
+        (kBegin)
+        (statement (identifier))
+        (kEnd)))
+    (kEnd)
+    (kEndDot)))

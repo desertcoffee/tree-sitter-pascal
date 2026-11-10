@@ -303,6 +303,9 @@ module.exports = grammar({
 		[$._ref, $._tplArg],
 		[$._ref, $.declEnumValue],
 		[$._literal, $.declEnumValue],
+		// A unit's `begin` section competes with the recovery-only block in
+		// _definitions. Keep both paths until the unit's final end/dot.
+		[$.implementation],
 	],
 
 	rules: {
@@ -331,18 +334,17 @@ module.exports = grammar({
 
 		unit:               $ => seq(
 			$.kUnit, $.moduleName, ';',
-			repeat(choice(
-				$.interface,
-				$.implementation,
-				$.initialization,
-				$.finalization,
-			)),
+			repeat(choice($.interface, $.implementation)),
+			optional($.initialization),
+			optional($.finalization),
 			$.kEnd, $.kEndDot
 		),
 
 		interface:       $ => seq($.kInterface, optional($._declarations)),
 		implementation:  $ => seq($.kImplementation, optional($._definitions)),
-		initialization:  $ => seq($.kInitialization, optional(tr($,'_statements'))),
+		// Delphi also allows `begin ... end.` for a unit's initialization.
+		// Keep the same section node; the unit rule consumes the final end.
+		initialization:  $ => seq(choice($.kInitialization, $.kBegin), optional(tr($,'_statements'))),
 		finalization:    $ => seq($.kFinalization, optional(tr($,'_statements'))),
 
 		moduleName:      $ => delimited1($.identifier, $.kDot),
