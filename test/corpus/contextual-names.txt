@@ -1,0 +1,93 @@
+==================
+Unsafe type name after a declaration, alongside unsafe directives
+==================
+
+unit ContextualNames;
+interface
+type
+  Safe<T: class> = class end;
+  Unsafe = class
+    class procedure Run; static;
+  end;
+  TAfter = class end; unsafe;
+procedure LowLevel; unsafe;
+implementation
+class procedure Unsafe.Run;
+begin
+end;
+procedure LowLevel;
+begin
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declTypes
+        (kType)
+        (declType
+          (genericTpl
+            (identifier)
+            (kLt)
+            (genericArgs
+              (genericArg
+                (identifier)
+                (kClass)))
+            (kGt))
+          (kEq)
+          (declClass
+            (kClass)
+            (kEnd)))
+        (declType
+          (identifier)
+          (kEq)
+          (declClass
+            (kClass)
+            (declProc
+              (kClass)
+              (kProcedure)
+              (identifier)
+              (procAttribute
+                (kStatic)))
+            (kEnd)))
+        (declType
+          (identifier)
+          (kEq)
+          (declClass
+            (kClass)
+            (kEnd))
+          (procAttribute
+            (kUnsafe))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (procAttribute
+          (kUnsafe))))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kClass)
+          (kProcedure)
+          (genericDot
+            (identifier)
+            (kDot)
+            (identifier)))
+        (block
+          (kBegin)
+          (kEnd)))
+      (defProc
+        (declProc
+          (kProcedure)
+          (identifier))
+        (block
+          (kBegin)
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))

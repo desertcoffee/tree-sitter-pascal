@@ -306,6 +306,8 @@ module.exports = grammar({
 		// A unit's `begin` section competes with the recovery-only block in
 		// _definitions. Keep both paths until the unit's final end/dot.
 		[$.implementation],
+		// `unsafe;` can be a directive, but `Unsafe = ...` starts a type.
+		[$.declType],
 	],
 
 	rules: {
@@ -597,7 +599,11 @@ module.exports = grammar({
 		genericTpl:      $ => op.args(2,$._genericName, $.kLt, $.genericArgs, $.kGt),
 
 		_genericName:    $ => choice(
-			$.identifier, $.genericDot, ...enable_if(templates, $.genericTpl)
+			$.identifier,
+			// `unsafe` is contextual: after a declaration's semicolon it
+			// may start the next type, rather than a trailing directive.
+			alias($.kUnsafe, $.identifier),
+			$.genericDot, ...enable_if(templates, $.genericTpl)
 		),
 		genericArgs:     $ => delimited1($.genericArg, ';'),
 		genericArg:      $ => seq(
