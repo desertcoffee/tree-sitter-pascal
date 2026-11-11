@@ -1,0 +1,187 @@
+===
+Caret control characters in case labels and expressions
+===
+procedure KeyPress(var Key: Char);
+begin
+  case Key of
+    ^H, ^V, ^X, #32..High(Char): Key := #0;
+  end;
+  if Key in [^@..^_, ^h, ^v, ^x] then Key := ^M;
+end;
+---
+
+(root
+  (defProc
+    (declProc
+      (kProcedure)
+      (identifier)
+      (declArgs
+        (declArg
+          (kVar)
+          (identifier)
+          (type
+            (typeref
+              (identifier))))))
+    (block
+      (kBegin)
+      (case
+        (kCase)
+        (identifier)
+        (kOf)
+        (caseCase
+          (caseLabel
+            (literalString
+              (literalChar))
+            (literalString
+              (literalChar))
+            (literalString
+              (literalChar))
+            (range
+              (literalString
+                (literalChar))
+              (exprCall
+                (identifier)
+                (exprArgs
+                  (identifier)))))
+          (assignment
+            (identifier)
+            (kAssign)
+            (literalString
+              (literalChar))))
+        (kEnd))
+      (if
+        (kIf)
+        (exprBinary
+          (identifier)
+          (kIn)
+          (exprBrackets
+            (range
+              (literalString
+                (literalChar))
+              (literalString
+                (literalChar)))
+            (literalString
+              (literalChar))
+            (literalString
+              (literalChar))
+            (literalString
+              (literalChar))))
+        (kThen)
+        (assignment
+          (identifier)
+          (kAssign)
+          (literalString
+            (literalChar))))
+      (kEnd))))
+
+===
+Caret control characters concatenate with strings and numeric characters
+===
+const
+  Controls = ^@^H^V^X^[^\^]^^^_;
+  Text = 'before'^M#10#$09'after';
+---
+
+(root
+  (declConsts
+    (kConst)
+    (declConst
+      (identifier)
+      (defaultValue
+        (kEq)
+        (literalString
+          (literalChar)
+          (literalChar)
+          (literalChar)
+          (literalChar)
+          (literalChar)
+          (literalChar)
+          (literalChar)
+          (literalChar)
+          (literalChar))))
+    (declConst
+      (identifier)
+      (defaultValue
+        (kEq)
+        (literalString
+          (literalChar)
+          (literalChar)
+          (literalChar))))))
+
+===
+Carets in pointer types and dereferences remain operators
+===
+type
+  H = Integer;
+  PH = ^H;
+  PPH = ^^H;
+var Ptr: ^H;
+procedure Run;
+begin
+  var Local: ^H := Ptr;
+  Ptr^ := Local^;
+end;
+---
+
+(root
+  (declTypes
+    (kType)
+    (declType
+      (identifier)
+      (kEq)
+      (type
+        (typeref
+          (identifier))))
+    (declType
+      (identifier)
+      (kEq)
+      (type
+        (typeref
+          (typerefPtr
+            (kHat)
+            (identifier)))))
+    (declType
+      (identifier)
+      (kEq)
+      (type
+        (typeref
+          (typerefPtr
+            (kHat)
+            (typerefPtr
+              (kHat)
+              (identifier)))))))
+  (declVars
+    (kVar)
+    (declVar
+      (identifier)
+      (type
+        (typeref
+          (typerefPtr
+            (kHat)
+            (identifier))))))
+  (defProc
+    (declProc
+      (kProcedure)
+      (identifier))
+    (block
+      (kBegin)
+      (assignment
+        (varAssignDef
+          (kVar)
+          (identifier)
+          (type
+            (typeref
+              (typerefPtr
+                (kHat)
+                (identifier)))))
+        (kAssign)
+        (identifier))
+      (assignment
+        (exprUnary
+          (identifier)
+          (kHat))
+        (kAssign)
+        (exprUnary
+          (identifier)
+          (kHat)))
+      (kEnd))))

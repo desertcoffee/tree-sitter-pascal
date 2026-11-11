@@ -7843,7 +7843,7 @@
         "required": false,
         "types": [
           {
-            "type": "typeref",
+            "type": "type",
             "named": true
           }
         ]

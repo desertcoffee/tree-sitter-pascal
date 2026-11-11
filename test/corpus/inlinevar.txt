@@ -17,14 +17,16 @@ end;
     (varDef
      (kVar)
      (identifier)
-     (typeref
-      (identifier)))
+     (type
+      (declString
+       (kString))))
     (assignment
       (varAssignDef
       (kVar)
       (identifier)
-      (typeref
-        (identifier)))
+      (type
+        (typeref
+          (identifier))))
       (kAssign)
       (literalNumber))
   (kEnd))))
@@ -91,8 +93,9 @@ end;
         (varAssignDef
           (kVar)
           (identifier)
-          (typeref
-            (identifier)))
+          (type
+            (typeref
+              (identifier))))
         (kAssign)
         (literalNumber))
       (kTo)

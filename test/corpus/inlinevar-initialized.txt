@@ -1,0 +1,77 @@
+===
+Initialized inline string and array variables
+===
+procedure DrawItem;
+begin
+  if Index >= 0 then
+  begin
+    var s: string := Items[Index];
+    var short: string[20] := s;
+    var values: array of Integer := [1, 2];
+    Use(s, short, values);
+  end;
+end;
+---
+
+(root
+  (defProc
+    (declProc
+      (kProcedure)
+      (identifier))
+    (block
+      (kBegin)
+      (if
+        (kIf)
+        (exprBinary
+          (identifier)
+          (kGte)
+          (literalNumber))
+        (kThen)
+        (block
+          (kBegin)
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (declString
+                  (kString))))
+            (kAssign)
+            (exprSubscript
+              (identifier)
+              (exprArgs
+                (identifier))))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (declString
+                  (kString)
+                  (literalNumber))))
+            (kAssign)
+            (identifier))
+          (assignment
+            (varAssignDef
+              (kVar)
+              (identifier)
+              (type
+                (declArray
+                  (kArray)
+                  (kOf)
+                  (type
+                    (typeref
+                      (identifier))))))
+            (kAssign)
+            (exprBrackets
+              (literalNumber)
+              (literalNumber)))
+          (statement
+            (exprCall
+              (identifier)
+              (exprArgs
+                (identifier)
+                (identifier)
+                (identifier))))
+          (kEnd)))
+      (kEnd))))

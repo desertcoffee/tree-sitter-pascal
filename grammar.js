@@ -368,11 +368,8 @@ module.exports = grammar({
 			),
 			$._expr
 		),
-		varAssignDef:          $ => seq($.kVar, field('name', $.identifier),
-			optional(seq(
-				':',
-				field('type', $.typeref)
-			))),
+		varAssignDef:    $ => seq($.kVar, field('name', $.identifier),
+			optional(seq(':', field('type', $.type)))),
 		varDef:          $ => seq($.kVar, delimited1(field('name', $.identifier)), ':', field('type', $.type)),
 		varLoopDef:      $ => seq($.kVar, field('name', $.identifier), optional(seq(':', field('type', $.typeref)))),
 		constDef:        $ => seq($.kConst, field('name', $.identifier),
@@ -585,7 +582,9 @@ module.exports = grammar({
 
 		typerefDot:      $ => op.infix(1,$._typeref, $.kDot, $._typeref),
 		typerefTpl:      $ => op.args(1, $._typeref, $.kLt, $.typerefArgs, $.kGt),
-		typerefPtr:      $ => op.prefix(1,$.kHat, $._typeref),
+		// In a type, Delphi interprets ^H as a pointer, not a control literal.
+		// Prefer the caret here without affecting literals in expressions.
+		typerefPtr:      $ => op.prefix(1, alias(token(prec(1, '^')), $.kHat), $._typeref),
 		typerefArgs:     $ => delimited1($._typeref),
 
 		// GENERIC TYPE DECLARATION --------------------------------------------
@@ -628,7 +627,11 @@ module.exports = grammar({
 		),
 		literalString:   $ => repeat1($._literalString),
 		_literalString:  $ => choice(/'[^']*'/, $.literalChar, $.multilineString),
-		literalChar:     $ => token(seq('#', choice(/[0-9][0-9_]*/, /\$[a-fA-F0-9_]+/))),
+		literalChar:     $ => token(choice(
+			seq('#', choice(/[0-9][0-9_]*/, /\$[a-fA-F0-9_]+/)),
+			// ^@ through ^_ are #0 through #31; lowercase letters also work.
+			/\^[@-_]/i
+		)),
 		literalNumber:   $ => choice($._literalInt, $._literalFloat),
 		_literalInt:     $ => choice(
 			/[0-9][0-9_]*/,

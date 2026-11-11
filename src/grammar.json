@@ -2455,7 +2455,7 @@
                   "name": "type",
                   "content": {
                     "type": "SYMBOL",
-                    "name": "typeref"
+                    "name": "type"
                   }
                 }
               ]
@@ -4410,8 +4410,20 @@
             "type": "FIELD",
             "name": "operator",
             "content": {
-              "type": "SYMBOL",
-              "name": "kHat"
+              "type": "ALIAS",
+              "content": {
+                "type": "TOKEN",
+                "content": {
+                  "type": "PREC",
+                  "value": 1,
+                  "content": {
+                    "type": "STRING",
+                    "value": "^"
+                  }
+                }
+              },
+              "named": true,
+              "value": "kHat"
             }
           },
           {
@@ -4801,24 +4813,34 @@
     "literalChar": {
       "type": "TOKEN",
       "content": {
-        "type": "SEQ",
+        "type": "CHOICE",
         "members": [
           {
-            "type": "STRING",
-            "value": "#"
-          },
-          {
-            "type": "CHOICE",
+            "type": "SEQ",
             "members": [
               {
-                "type": "PATTERN",
-                "value": "[0-9][0-9_]*"
+                "type": "STRING",
+                "value": "#"
               },
               {
-                "type": "PATTERN",
-                "value": "\\$[a-fA-F0-9_]+"
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "PATTERN",
+                    "value": "[0-9][0-9_]*"
+                  },
+                  {
+                    "type": "PATTERN",
+                    "value": "\\$[a-fA-F0-9_]+"
+                  }
+                ]
               }
             ]
+          },
+          {
+            "type": "PATTERN",
+            "value": "\\^[@-_]",
+            "flags": "i"
           }
         ]
       }
