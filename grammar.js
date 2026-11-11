@@ -493,7 +493,10 @@ module.exports = grammar({
 		// template. Then the existing node is simply "renamed". Because of
 		// this, we can't have an extra node in only one of the branches.
 		//
-		exprTpl:         $ => op.args(5, $._ref, $.kLt, delimited1($._tplArg, ',', 5),  $.kGt),
+		// Prefer a completed specialization over the comparison reading of
+		// `TFoo<T>(value)`. Both can parse cleanly (e.g. in a for-loop bound),
+		// so keep the comparison path alive but rank the generic path higher.
+		exprTpl:         $ => prec.dynamic(1, op.args(5, $._ref, $.kLt, delimited1($._tplArg, ',', 5), $.kGt)),
 		// Generic arguments in expressions must be types; restricting them
 		// lets GLR discard the generic reading of `F(a < b, c(d))`.
 		_tplArg:         $ => choice(

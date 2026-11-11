@@ -1,0 +1,224 @@
+===
+Generic cast in a for-loop upper bound
+===
+
+procedure TGroupComponent<T>.CopyValue(component: TBaseComponent);
+var
+  I: Integer;
+begin
+  inherited;
+  var gc := (component as TGroupComponent<T>);
+  var gc2 := TGroupComponent<T>(component).GroupSpecs;
+  for I := 0 to TGroupComponent<T>(component).GroupSpecs.Count - 1 do
+  begin
+    FGroupSpecs.Add(gc.GroupSpecs.Items[I].Copy);
+  end;
+end;
+
+---
+
+(root
+  (defProc
+    (declProc
+      (kProcedure)
+      (genericDot
+        (genericTpl
+          (identifier)
+          (kLt)
+          (genericArgs
+            (genericArg
+              (identifier)))
+          (kGt))
+        (kDot)
+        (identifier))
+      (declArgs
+        (declArg
+          (identifier)
+          (type
+            (typeref
+              (identifier))))))
+    (declVars
+      (kVar)
+      (declVar
+        (identifier)
+        (type
+          (typeref
+            (identifier)))))
+    (block
+      (kBegin)
+      (statement
+        (inherited
+          (kInherited)))
+      (assignment
+        (varAssignDef
+          (kVar)
+          (identifier))
+        (kAssign)
+        (exprParens
+          (exprBinary
+            (identifier)
+            (kAs)
+            (exprTpl
+              (identifier)
+              (kLt)
+              (identifier)
+              (kGt)))))
+      (assignment
+        (varAssignDef
+          (kVar)
+          (identifier))
+        (kAssign)
+        (exprDot
+          (exprCall
+            (exprTpl
+              (identifier)
+              (kLt)
+              (identifier)
+              (kGt))
+            (exprArgs
+              (identifier)))
+          (kDot)
+          (identifier)))
+      (for
+        (kFor)
+        (assignment
+          (identifier)
+          (kAssign)
+          (literalNumber))
+        (kTo)
+        (exprBinary
+          (exprDot
+            (exprDot
+              (exprCall
+                (exprTpl
+                  (identifier)
+                  (kLt)
+                  (identifier)
+                  (kGt))
+                (exprArgs
+                  (identifier)))
+              (kDot)
+              (identifier))
+            (kDot)
+            (identifier))
+          (kSub)
+          (literalNumber))
+        (kDo)
+        (block
+          (kBegin)
+          (statement
+            (exprCall
+              (exprDot
+                (identifier)
+                (kDot)
+                (identifier))
+              (exprArgs
+                (exprDot
+                  (exprSubscript
+                    (exprDot
+                      (exprDot
+                        (identifier)
+                        (kDot)
+                        (identifier))
+                      (kDot)
+                      (identifier))
+                    (exprArgs
+                      (identifier)))
+                  (kDot)
+                  (identifier)))))
+          (kEnd)))
+      (kEnd))))
+
+===
+Comparisons remain comparisons alongside generic casts
+===
+
+procedure Run;
+begin
+  if a < b then Foo;
+  if a > b then Foo;
+  if a < b > c then Foo;
+  F(a < b, c(d));
+  F(a < b, c > d);
+  F(a < b, c(d) > e);
+end;
+
+---
+
+(root
+  (defProc
+    (declProc
+      (kProcedure)
+      (identifier))
+    (block
+      (kBegin)
+      (if
+        (kIf)
+        (exprBinary
+          (identifier)
+          (kLt)
+          (identifier))
+        (kThen)
+        (statement
+          (identifier)))
+      (if
+        (kIf)
+        (exprBinary
+          (identifier)
+          (kGt)
+          (identifier))
+        (kThen)
+        (statement
+          (identifier)))
+      (if
+        (kIf)
+        (exprBinary
+          (exprBinary
+            (identifier)
+            (kLt)
+            (identifier))
+          (kGt)
+          (identifier))
+        (kThen)
+        (statement
+          (identifier)))
+      (statement
+        (exprCall
+          (identifier)
+          (exprArgs
+            (exprBinary
+              (identifier)
+              (kLt)
+              (identifier))
+            (exprCall
+              (identifier)
+              (exprArgs
+                (identifier))))))
+      (statement
+        (exprCall
+          (identifier)
+          (exprArgs
+            (exprBinary
+              (identifier)
+              (kLt)
+              (identifier))
+            (exprBinary
+              (identifier)
+              (kGt)
+              (identifier)))))
+      (statement
+        (exprCall
+          (identifier)
+          (exprArgs
+            (exprBinary
+              (identifier)
+              (kLt)
+              (identifier))
+            (exprBinary
+              (exprCall
+                (identifier)
+                (exprArgs
+                  (identifier)))
+              (kGt)
+              (identifier)))))
+      (kEnd))))

@@ -3114,69 +3114,73 @@
       }
     },
     "exprTpl": {
-      "type": "PREC_LEFT",
-      "value": 5,
+      "type": "PREC_DYNAMIC",
+      "value": 1,
       "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "FIELD",
-            "name": "entity",
-            "content": {
+        "type": "PREC_LEFT",
+        "value": 5,
+        "content": {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "entity",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_ref"
+              }
+            },
+            {
               "type": "SYMBOL",
-              "name": "_ref"
-            }
-          },
-          {
-            "type": "SYMBOL",
-            "name": "kLt"
-          },
-          {
-            "type": "FIELD",
-            "name": "args",
-            "content": {
-              "type": "SEQ",
-              "members": [
-                {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "REPEAT1",
-                      "content": {
-                        "type": "PREC",
-                        "value": 5,
+              "name": "kLt"
+            },
+            {
+              "type": "FIELD",
+              "name": "args",
+              "content": {
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "REPEAT1",
                         "content": {
-                          "type": "SEQ",
-                          "members": [
-                            {
-                              "type": "SYMBOL",
-                              "name": "_tplArg"
-                            },
-                            {
-                              "type": "STRING",
-                              "value": ","
-                            }
-                          ]
+                          "type": "PREC",
+                          "value": 5,
+                          "content": {
+                            "type": "SEQ",
+                            "members": [
+                              {
+                                "type": "SYMBOL",
+                                "name": "_tplArg"
+                              },
+                              {
+                                "type": "STRING",
+                                "value": ","
+                              }
+                            ]
+                          }
                         }
+                      },
+                      {
+                        "type": "BLANK"
                       }
-                    },
-                    {
-                      "type": "BLANK"
-                    }
-                  ]
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "_tplArg"
-                }
-              ]
+                    ]
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "_tplArg"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kGt"
             }
-          },
-          {
-            "type": "SYMBOL",
-            "name": "kGt"
-          }
-        ]
+          ]
+        }
       }
     },
     "_tplArg": {
