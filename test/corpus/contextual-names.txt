@@ -91,3 +91,154 @@ end.
           (kEnd))))
     (kEnd)
     (kEndDot)))
+
+==================
+Local variable name after another variable
+==================
+
+function TRegExpr.MatchPrim(prog: PRegExprChar): Boolean;
+var
+  LoopCnt: Integer;
+  Local: TRegExprMatchPrimLocals;
+  After: Integer;
+begin
+  Local.Value := LoopCnt;
+  Result := False;
+end;
+
+---
+
+(root
+  (defProc
+    (declProc
+      (kFunction)
+      (genericDot
+        (identifier)
+        (kDot)
+        (identifier))
+      (declArgs
+        (declArg
+          (identifier)
+          (type
+            (typeref
+              (identifier)))))
+      (typeref
+        (identifier)))
+    (declVars
+      (kVar)
+      (declVar
+        (identifier)
+        (type
+          (typeref
+            (identifier))))
+      (declVar
+        (identifier)
+        (type
+          (typeref
+            (identifier))))
+      (declVar
+        (identifier)
+        (type
+          (typeref
+            (identifier)))))
+    (block
+      (kBegin)
+      (assignment
+        (exprDot
+          (identifier)
+          (kDot)
+          (identifier))
+        (kAssign)
+        (identifier))
+      (assignment
+        (identifier)
+        (kAssign)
+        (kFalse))
+      (kEnd))))
+
+==================
+Local variables alongside local directives
+==================
+
+unit ContextualLocals;
+interface
+var
+  Count: Integer; local;
+  Local: Integer;
+  After: Integer;
+procedure LowLevel; local;
+implementation
+procedure LowLevel; local;
+var
+  Value: Integer; local;
+  LOCAL, Other: Integer;
+begin
+  LOCAL := Value;
+end;
+end.
+
+---
+
+(root
+  (unit
+    (kUnit)
+    (moduleName
+      (identifier))
+    (interface
+      (kInterface)
+      (declVars
+        (kVar)
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier)))
+          (procAttribute
+            (kLocal)))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier))))
+        (declVar
+          (identifier)
+          (type
+            (typeref
+              (identifier)))))
+      (declProc
+        (kProcedure)
+        (identifier)
+        (procAttribute
+          (kLocal))))
+    (implementation
+      (kImplementation)
+      (defProc
+        (declProc
+          (kProcedure)
+          (identifier)
+          (procAttribute
+            (kLocal)))
+        (declVars
+          (kVar)
+          (declVar
+            (identifier)
+            (type
+              (typeref
+                (identifier)))
+            (procAttribute
+              (kLocal)))
+          (declVar
+            (identifier)
+            (identifier)
+            (type
+              (typeref
+                (identifier)))))
+        (block
+          (kBegin)
+          (assignment
+            (identifier)
+            (kAssign)
+            (identifier))
+          (kEnd))))
+    (kEnd)
+    (kEndDot)))

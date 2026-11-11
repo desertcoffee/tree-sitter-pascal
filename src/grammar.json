@@ -5623,8 +5623,22 @@
                         "type": "SEQ",
                         "members": [
                           {
-                            "type": "SYMBOL",
-                            "name": "identifier"
+                            "type": "CHOICE",
+                            "members": [
+                              {
+                                "type": "SYMBOL",
+                                "name": "identifier"
+                              },
+                              {
+                                "type": "ALIAS",
+                                "content": {
+                                  "type": "SYMBOL",
+                                  "name": "kLocal"
+                                },
+                                "named": true,
+                                "value": "identifier"
+                              }
+                            ]
                           },
                           {
                             "type": "STRING",
@@ -5640,8 +5654,22 @@
                 ]
               },
               {
-                "type": "SYMBOL",
-                "name": "identifier"
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "identifier"
+                  },
+                  {
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "kLocal"
+                    },
+                    "named": true,
+                    "value": "identifier"
+                  }
+                ]
               }
             ]
           }
@@ -9984,6 +10012,9 @@
     ],
     [
       "declType"
+    ],
+    [
+      "declVar"
     ]
   ],
   "precedences": [],

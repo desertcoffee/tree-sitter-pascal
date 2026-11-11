@@ -308,6 +308,8 @@ module.exports = grammar({
 		[$.implementation],
 		// `unsafe;` can be a directive, but `Unsafe = ...` starts a type.
 		[$.declType],
+		// `local;` can be a directive, but `Local: ...` starts a variable.
+		[$.declVar],
 	],
 
 	rules: {
@@ -741,7 +743,9 @@ module.exports = grammar({
 
 		declVar:         $ => seq(
 			...enable_if(rtti, optional($.rttiAttributes)),
-			field('name', delimited1($.identifier)),
+			// After a semicolon, `Local` may name the next variable rather
+			// than being a trailing directive on the previous declaration.
+			field('name', delimited1(choice($.identifier, alias($.kLocal, $.identifier)))),
 			':',
 			field('type', $.type),
 			optional(choice(
